@@ -1,0 +1,21 @@
+{
+  "name": "Calculadora de Producción",
+  "short_name": "Calculadora",
+  "description": "Calculadora para cantidad, cajas y total.",
+  "start_url": "calculadora.html",
+  "display": "standalone",
+  "background_color": "#F3F4F6",
+  "theme_color": "#14B8A6",
+  "icons": [
+    {
+      "src": "https://placehold.co/192x192/14B8A6/FFFFFF?text=Calc",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://placehold.co/512x512/14B8A6/FFFFFF?text=Calc",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
