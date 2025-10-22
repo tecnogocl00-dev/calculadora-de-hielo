@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-R">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Cajas</title>
+
+    <!-- 
+      *** INICIO DE CAMBIOS PARA CONVERTIR EN APP ***
+    -->
+
+    <!-- Color de la barra de estado del navegador (en móviles) -->
+    <!-- El color es 'teal-500' -->
+    <meta name="theme-color" content="#14B8A6">
+    
+    <!-- Tags de Apple para "app" web (iOS) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Calculadora">
+    
+    <!-- Icono para Apple (usamos un placeholder) -->
+    <link rel="apple-touch-icon" href="https://placehold.co/180x180/14B8A6/FFFFFF?text=Calc">
+
+    <!-- CAMBIO: Enlazamos al archivo manifest.json externo -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- *** FIN DE CAMBIOS PARA CONVERTIR EN APP *** -->
+
+
+    <!-- Incluimos Tailwind CSS para un diseño moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Un pequeño estilo para los inputs de número */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        /* Asegura que el cuerpo ocupe toda la altura */
+        html, body {
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen font-sans">
+
+    <div class="w-full max-w-md p-6 bg-teal-50 dark:bg-gray-800 rounded-2xl shadow-xl">
+        
+        <h1 class="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
+            Calculadora de Producción
+        </h1>
+        
+        <div class="space-y-4">
+            <!-- Campo 1: Cantidad -->
+            <div>
+                <label for="quantity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Cantidad
+                </label>
+                <input type="number" id="quantity" name="quantity"
+                       class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                       placeholder="Escribe una cantidad...">
+            </div>
+
+            <!-- Campo 2: Cajas -->
+            <div>
+                <label for="boxes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Cajas (20 por caja)
+                </label>
+                <input type="number" id="boxes" name="boxes"
+                       class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                       placeholder="Escribe un n° de cajas...">
+            </div>
+
+            <!-- Campo 3: Total -->
+            <div>
+                <label for="total" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Total (Cantidad x 400)
+                </label>
+                <input type="number" id="total" name="total"
+                       class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                       placeholder="Escribe un total...">
+            </div>
+        </div>
+
+        <!-- Botón de Limpiar -->
+        <button id="resetButton"
+                class="w-full mt-6 py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors">
+            Limpiar
+        </button>
+
+    </div>
+
+    <script>
+        // Constantes de cálculo
+        const MULTIPLIER = 400;
+        const ITEMS_PER_BOX = 20;
+
+        // Obtener los elementos del DOM
+        const quantityInput = document.getElementById('quantity');
+        const boxesInput = document.getElementById('boxes');
+        const totalInput = document.getElementById('total');
+        const resetButton = document.getElementById('resetButton');
+
+        // Función para formatear números, evitando decimales innecesarios si es posible
+        function formatNumber(num) {
+            if (isNaN(num)) return '';
+            // Si el número es un entero, no mostrar decimales.
+            // Si tiene decimales, mostrar hasta 2.
+            return parseFloat(num.toFixed(2));
+        }
+
+        // --- Event Listeners ---
+
+        // 1. Cuando se edita la CANTIDAD
+        quantityInput.addEventListener('input', () => {
+            const quantity = parseFloat(quantityInput.value);
+
+            if (!isNaN(quantity)) {
+                totalInput.value = formatNumber(quantity * MULTIPLIER);
+                boxesInput.value = formatNumber(quantity / ITEMS_PER_BOX);
+            } else {
+                totalInput.value = '';
+                boxesInput.value = '';
+            }
+        });
+
+        // 2. Cuando se editan las CAJAS
+        boxesInput.addEventListener('input', () => {
+            const boxes = parseFloat(boxesInput.value);
+
+            if (!isNaN(boxes)) {
+                const quantity = boxes * ITEMS_PER_BOX;
+                quantityInput.value = formatNumber(quantity);
+                totalInput.value = formatNumber(quantity * MULTIPLIER);
+            } else {
+                quantityInput.value = '';
+                totalInput.value = '';
+            }
+        });
+
+        // 3. Cuando se edita el TOTAL
+        totalInput.addEventListener('input', () => {
+            const total = parseFloat(totalInput.value);
+
+            if (!isNaN(total)) {
+                const quantity = total / MULTIPLIER;
+                quantityInput.value = formatNumber(quantity);
+                boxesInput.value = formatNumber(quantity / ITEMS_PER_BOX);
+            } else {
+                quantityInput.value = '';
+                boxesInput.value = '';
+            }
+        });
+
+        // 4. Botón de Limpiar
+        resetButton.addEventListener('click', () => {
+            quantityInput.value = '';
+            boxesInput.value = '';
+            totalInput.value = '';
+        });
+
+    </script>
+
+    <!-- *** INICIO SCRIPT SERVICE WORKER *** -->
+    <!-- Script para registrar el Service Worker -->
+    <script>
+        // Comprobamos si el navegador soporta Service Workers
+        if ('serviceWorker' in navigator) {
+            // Esperamos a que la página cargue
+            window.addEventListener('load', () => {
+                // Registramos el archivo 'service-worker.js'
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registrado con éxito:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Error al registrar el Service Worker:', error);
+                    });
+            });
+        }
+    </script>
+    <!-- *** FIN SCRIPT SERVICE WORKER *** -->
+
+</body>
+</html>
