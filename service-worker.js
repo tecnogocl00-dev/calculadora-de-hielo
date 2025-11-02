@@ -1,53 +1,49 @@
-// Nombre de la caché (debe cambiar si actualizas los archivos)
-const CACHE_NAME = 'calculadora-cache-v3'; 
+// CAMBIO: Actualizamos la versión de la caché a v4
+const CACHE_NAME = 'calculadora-cache-v4'; 
+console.log(`Service Worker: Cargando versión ${CACHE_NAME}`);
 
-// Archivos a guardar en caché para que funcione offline
+// Archivos a guardar en caché
 const urlsToCache = [
   'index.html',
   'manifest.json',
-  'icon-180.png', // Icono de Apple
-  'icon-192.png', // Icono del manifest
-  'icon-512.png', // Icono del manifest
-  'https://cdn.tailwindcss.com' // Hoja de estilos de Tailwind
+  'icon-180.png',
+  'icon-192.png',
+  'icon-512.png',
+  'https://cdn.tailwindcss.com' 
 ];
 
-// Evento 'install': se dispara cuando el SW se instala
+// Evento 'install'
 self.addEventListener('install', event => {
   console.log('Service Worker: Instalando...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Service Worker: Abriendo cache y guardando archivos');
-        // Añade todos los archivos definidos a la caché
         return cache.addAll(urlsToCache);
       })
-      .then(() => self.skipWaiting()) // Fuerza la activación del nuevo SW
+      .then(() => self.skipWaiting())
   );
 });
 
-// Evento 'activate': se dispara cuando el SW se activa
-// Aquí es donde limpiamos cachés antiguas
+// Evento 'activate': Limpia cachés antiguas
 self.addEventListener('activate', event => {
   console.log('Service Worker: Activando...');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cache => {
-          // Si el nombre de la caché no es el actual, bórrala
           if (cache !== CACHE_NAME) {
             console.log('Service Worker: Limpiando cache antigua:', cache);
             return caches.delete(cache);
           }
         })
       );
-    }).then(() => self.clients.claim()) // Toma control inmediato de las páginas
+    }).then(() => self.clients.claim())
   );
 });
 
-// Evento 'fetch': se dispara con cada petición de red
-// Estrategia: Cache-First (primero busca en caché)
+// Evento 'fetch': Sirve desde caché primero
 self.addEventListener('fetch', event => {
-  // Ignoramos las peticiones que no son GET
   if (event.request.method !== 'GET') {
       return;
   }
@@ -55,25 +51,22 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Si el recurso está en la caché, lo devuelve desde ahí
+        // Si está en caché, lo devuelve
         if (response) {
           return response;
         }
 
-        // Si no está en caché, va a la red a buscarlo
+        // Si no, va a la red
         return fetch(event.request).then(
           response => {
-            // Verificar si la respuesta es válida
             if (!response || response.status !== 200 || (response.type !== 'basic' && response.type !== 'cors')) {
               return response;
             }
 
-            // Clonamos la respuesta para poder guardarla en caché y devolverla al navegador
             const responseToCache = response.clone();
 
             caches.open(CACHE_NAME)
               .then(cache => {
-                // Solo guardamos en caché si es una URL de nuestra app o de la CDN
                 const url = event.request.url;
                 if (!url.startsWith('http') || url.startsWith(self.location.origin) || url.startsWith('https://cdn.tailwindcss.com')) {
                     cache.put(event.request, responseToCache);
@@ -83,10 +76,7 @@ self.addEventListener('fetch', event => {
             return response;
           }
         ).catch(err => {
-            // Manejo básico de error de red (podría devolver una página offline)
             console.warn('Service Worker: Fetch fallido,', err);
-            // Opcional: devolver un recurso offline genérico
-            // return caches.match('offline.html');
         });
       })
   );
