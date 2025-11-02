@@ -1,39 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-R">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CAMBIO: Título de la pestaña del navegador -->
     <title>Calculadora de Hielo</title>
-
-    <!-- 
-      *** INICIO DE CAMBIOS PARA CONVERTIR EN APP ***
-    -->
-
-    <!-- Color de la barra de estado del navegador (en móviles) -->
-    <!-- El color es 'teal-500' -->
     <meta name="theme-color" content="#14B8A6">
-    
-    <!-- Tags de Apple para "app" web (iOS) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- CAMBIO: Título para el icono en iOS -->
     <meta name="apple-mobile-web-app-title" content="Hielo Calc">
-    
-    <!-- Icono para Apple (usamos un placeholder) -->
-    <!-- CAMBIO: Apunta a un icono local -->
     <link rel="apple-touch-icon" href="icon-180.png">
-
-    <!-- CAMBIO: Enlazamos al archivo manifest.json externo -->
     <link rel="manifest" href="manifest.json">
-    
-    <!-- *** FIN DE CAMBIOS PARA CONVERTIR EN APP *** -->
-
-
-    <!-- Incluimos Tailwind CSS para un diseño moderno -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Un pequeño estilo para los inputs de número */
+        /* Ocultar flechas en inputs de número */
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -42,58 +21,98 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
-        /* Asegura que el cuerpo ocupe toda la altura */
         html, body {
             height: 100%;
         }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen font-sans">
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen font-sans text-gray-800 dark:text-white">
 
-    <div class="w-full max-w-md p-6 bg-teal-50 dark:bg-gray-800 rounded-2xl shadow-xl">
+    <!-- Contenedor principal con padding para que no pegue a los bordes -->
+    <div class="w-full max-w-lg mx-auto p-4">
         
-        <!-- CAMBIO: Título principal en la app -->
-        <h1 class="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
-            Calculadora de Hielo
-        </h1>
-        
-        <div class="space-y-4">
-            <!-- Campo 1: Cantidad -->
-            <div>
-                <label for="quantity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Cantidad
-                </label>
-                <input type="number" id="quantity" name="quantity"
-                       class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                       placeholder="Escribe una cantidad...">
+        <!-- Tarjeta de Entradas -->
+        <div class="bg-teal-50 dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-6">
+            <h1 class="text-2xl font-bold text-center mb-6">
+                Calculadora de Hielo
+            </h1>
+            
+            <div class="space-y-4">
+                <!-- Campo 1: Cantidad -->
+                <div>
+                    <label for="quantity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Cantidad
+                    </label>
+                    <input type="number" id="quantity"
+                           class="w-full px-4 py-3 bg-white dark:bg-gray-700 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                           placeholder="0">
+                </div>
+
+                <!-- Campo 2: Cajas -->
+                <div>
+                    <label for="boxes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Cajas (20 por caja)
+                    </label>
+                    <input type="number" id="boxes"
+                           class="w-full px-4 py-3 bg-white dark:bg-gray-700 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                           placeholder="0">
+                </div>
+
+                <!-- Campo 3: Peso (Total) -->
+                <div>
+                    <label for="weight" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Peso (Total) (Cantidad x 400)
+                    </label>
+                    <input type="number" id="weight"
+                           class="w-full px-4 py-3 bg-white dark:bg-gray-700 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                           placeholder="0">
+                </div>
             </div>
 
-            <!-- Campo 2: Cajas -->
-            <div>
-                <label for="boxes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Cajas (20 por caja)
-                </label>
-                <input type="number" id="boxes" name="boxes"
-                       class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                       placeholder="Escribe un n° de cajas...">
-            </div>
-
-            <!-- Campo 3: Total -->
-            <div>
-                <label for="total" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Total (Cantidad x 400)
-                </label>
-                <input type="number" id="total" name="total"
-                       class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                       placeholder="Escribe un total...">
+            <!-- Botones de Acción -->
+            <div class="flex gap-4 mt-6">
+                <button id="resetInputsButton"
+                        class="w-1/2 py-3 px-4 bg-gray-400 hover:bg-gray-500 text-white font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors">
+                    Limpiar
+                </button>
+                <button id="addButton"
+                        class="w-1/2 py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition-colors">
+                    Agregar
+                </button>
             </div>
         </div>
 
-        <!-- Botón de Limpiar -->
-        <button id="resetButton"
-                class="w-full mt-6 py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors">
-            Limpiar
-        </button>
+        <!-- Tarjeta de Totales -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-bold text-center mb-4">Totales</h2>
+            <div class="space-y-3 text-lg">
+                <div class="flex justify-between">
+                    <span class="font-medium text-gray-600 dark:text-gray-300">Cantidad Total:</span>
+                    <span id="totalQuantity" class="font-bold text-teal-600 dark:text-teal-400">0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="font-medium text-gray-600 dark:text-gray-300">Cajas Totales:</span>
+                    <span id="totalBoxes" class="font-bold text-teal-600 dark:text-teal-400">0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="font-medium text-gray-600 dark:text-gray-300">Peso Total:</span>
+                    <span id="totalWeight" class="font-bold text-teal-600 dark:text-teal-400">0</span>
+                </div>
+            </div>
+            <button id="resetAllButton"
+                class="w-full mt-6 py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors">
+                Limpiar Todo
+            </button>
+        </div>
+
+        <!-- Sección de Detalle -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-center mb-4">Detalle de Entradas</h2>
+            <ul id="entriesList" class="space-y-3">
+                <!-- Las entradas se añadirán aquí con JS -->
+                <li class="text-center text-gray-500 dark:text-gray-400" id="emptyMessage">No hay entradas.</li>
+            </ul>
+        </div>
 
     </div>
 
@@ -102,31 +121,41 @@
         const MULTIPLIER = 400;
         const ITEMS_PER_BOX = 20;
 
-        // Obtener los elementos del DOM
+        // --- MANEJO DEL ESTADO ---
+        let entries = [];
+
+        // --- OBTENER ELEMENTOS DEL DOM ---
         const quantityInput = document.getElementById('quantity');
         const boxesInput = document.getElementById('boxes');
-        const totalInput = document.getElementById('total');
-        const resetButton = document.getElementById('resetButton');
+        const weightInput = document.getElementById('weight');
+        
+        const resetInputsButton = document.getElementById('resetInputsButton');
+        const addButton = document.getElementById('addButton');
+        const resetAllButton = document.getElementById('resetAllButton');
 
-        // Función para formatear números, evitando decimales innecesarios si es posible
+        const totalQuantityEl = document.getElementById('totalQuantity');
+        const totalBoxesEl = document.getElementById('totalBoxes');
+        const totalWeightEl = document.getElementById('totalWeight');
+        
+        const entriesList = document.getElementById('entriesList');
+        const emptyMessage = document.getElementById('emptyMessage');
+
+        // --- FUNCIONES DE CÁLCULO ---
+
+        // Formatear números
         function formatNumber(num) {
-            if (isNaN(num)) return '';
-            // Si el número es un entero, no mostrar decimales.
-            // Si tiene decimales, mostrar hasta 2.
+            if (isNaN(num)) return 0;
             return parseFloat(num.toFixed(2));
         }
-
-        // --- Event Listeners ---
 
         // 1. Cuando se edita la CANTIDAD
         quantityInput.addEventListener('input', () => {
             const quantity = parseFloat(quantityInput.value);
-
             if (!isNaN(quantity)) {
-                totalInput.value = formatNumber(quantity * MULTIPLIER);
+                weightInput.value = formatNumber(quantity * MULTIPLIER);
                 boxesInput.value = formatNumber(quantity / ITEMS_PER_BOX);
             } else {
-                totalInput.value = '';
+                weightInput.value = '';
                 boxesInput.value = '';
             }
         });
@@ -134,23 +163,21 @@
         // 2. Cuando se editan las CAJAS
         boxesInput.addEventListener('input', () => {
             const boxes = parseFloat(boxesInput.value);
-
             if (!isNaN(boxes)) {
                 const quantity = boxes * ITEMS_PER_BOX;
                 quantityInput.value = formatNumber(quantity);
-                totalInput.value = formatNumber(quantity * MULTIPLIER);
+                weightInput.value = formatNumber(quantity * MULTIPLIER);
             } else {
                 quantityInput.value = '';
-                totalInput.value = '';
+                weightInput.value = '';
             }
         });
 
-        // 3. Cuando se edita el TOTAL
-        totalInput.addEventListener('input', () => {
-            const total = parseFloat(totalInput.value);
-
-            if (!isNaN(total)) {
-                const quantity = total / MULTIPLIER;
+        // 3. Cuando se edita el PESO (Total)
+        weightInput.addEventListener('input', () => {
+            const weight = parseFloat(weightInput.value);
+            if (!isNaN(weight)) {
+                const quantity = weight / MULTIPLIER;
                 quantityInput.value = formatNumber(quantity);
                 boxesInput.value = formatNumber(quantity / ITEMS_PER_BOX);
             } else {
@@ -159,35 +186,108 @@
             }
         });
 
-        // 4. Botón de Limpiar
-        resetButton.addEventListener('click', () => {
+        // --- FUNCIONES DE RENDERIZADO ---
+
+        function renderApp() {
+            // 1. Limpiar lista
+            entriesList.innerHTML = '';
+
+            // 2. Renderizar lista de entradas
+            if (entries.length === 0) {
+                entriesList.appendChild(emptyMessage);
+            } else {
+                entries.forEach(entry => {
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg';
+                    li.innerHTML = `
+                        <div class="text-sm">
+                            <div>Cant: <span class="font-medium">${entry.quantity}</span></div>
+                            <div>Cajas: <span class="font-medium">${entry.boxes}</span></div>
+                            <div>Peso: <span class="font-medium">${entry.weight}</span></div>
+                        </div>
+                        <button data-id="${entry.id}" class="delete-btn text-red-500 hover:text-red-700 font-bold px-2 py-1 rounded">&times;</button>
+                    `;
+                    entriesList.appendChild(li);
+                });
+            }
+
+            // 3. Calcular y renderizar totales
+            const totalQuantity = entries.reduce((sum, entry) => sum + entry.quantity, 0);
+            const totalBoxes = entries.reduce((sum, entry) => sum + entry.boxes, 0);
+            const totalWeight = entries.reduce((sum, entry) => sum + entry.weight, 0);
+
+            totalQuantityEl.textContent = formatNumber(totalQuantity);
+            totalBoxesEl.textContent = formatNumber(totalBoxes);
+            totalWeightEl.textContent = formatNumber(totalWeight);
+        }
+
+        // --- MANEJADORES DE EVENTOS DE BOTONES ---
+
+        // Limpiar solo los campos de entrada
+        resetInputsButton.addEventListener('click', () => {
             quantityInput.value = '';
             boxesInput.value = '';
-            totalInput.value = '';
+            weightInput.value = '';
         });
+
+        // Limpiar todo (lista y totales)
+        resetAllButton.addEventListener('click', () => {
+            entries = [];
+            renderApp();
+            resetInputsButton.click(); // Limpia también los inputs
+        });
+
+        // Agregar una entrada a la lista
+        addButton.addEventListener('click', () => {
+            const quantity = parseFloat(quantityInput.value) || 0;
+            const boxes = parseFloat(boxesInput.value) || 0;
+            const weight = parseFloat(weightInput.value) || 0;
+
+            // No agregar si todo está en cero
+            if (quantity === 0 && boxes === 0 && weight === 0) {
+                return;
+            }
+
+            const newEntry = {
+                id: Date.now(),
+                quantity: formatNumber(quantity),
+                boxes: formatNumber(boxes),
+                weight: formatNumber(weight)
+            };
+
+            entries.push(newEntry);
+            renderApp();
+            resetInputsButton.click(); // Limpiar inputs después de agregar
+        });
+
+        // Borrar una entrada (usando delegación de eventos)
+        entriesList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-btn')) {
+                const idToDelete = parseInt(e.target.dataset.id);
+                entries = entries.filter(entry => entry.id !== idToDelete);
+                renderApp();
+            }
+        });
+
+        // Renderizado inicial
+        renderApp();
 
     </script>
 
-    <!-- *** INICIO SCRIPT SERVICE WORKER *** -->
     <!-- Script para registrar el Service Worker -->
     <script>
-        // Comprobamos si el navegador soporta Service Workers
         if ('serviceWorker' in navigator) {
-            // Esperamos a que la página cargue
             window.addEventListener('load', () => {
-                // Registramos el archivo 'service-worker.js'
                 navigator.serviceWorker.register('service-worker.js')
                     .then(registration => {
-                        console.log('Service Worker registrado con éxito:', registration.scope);
+                        console.log('Service Worker registrado:', registration.scope);
                     })
                     .catch(error => {
-                        console.log('Error al registrar el Service Worker:', error);
+                        console.log('Error al registrar Service Worker:', error);
                     });
             });
         }
     </script>
-    <!-- *** FIN SCRIPT SERVICE WORKER *** -->
-
 </body>
 </html>
 
